@@ -1,0 +1,7 @@
+[project]
+name = "vbdb-data"
+version = "0.1.0"
+description = "Tools for gathering the data needed for the volleyballdatabased.com page"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
