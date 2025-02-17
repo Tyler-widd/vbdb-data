@@ -7,37 +7,26 @@ on:
   schedule:
     - cron: '0 0 * * *'  # Run daily at midnight UTC
   workflow_dispatch:  # Allow manual triggering
-  uv-example:
-    name: python
-    runs-on: ubuntu-latest
 
+jobs:
+  install_job:
+    name: Run Python Script
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Install uv
         uses: astral-sh/setup-uv@v5
-
+      
       - name: Set up Python
         run: uv python install
         with:
           python-version-file: "pyproject.toml"
-
-jobs:
-  install_job:
-    name: python
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
+      
       - name: Install the project
         run: uv sync --all-extras --dev
-
+      
       - name: Run fetch_all_teams.py
         run: uv run fetch_all_teams.py
         env:
           GITHUB_TOKEN: ${{ secrets.VOLLEYBALLDATABASED }}
-          
