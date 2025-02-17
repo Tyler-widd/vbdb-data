@@ -1,6 +1,5 @@
 import json
 import os
-import subprocess
 from fetch_lovb import LOVB
 from fetch_ncaa import NCAA
 from fetch_pvf import PVF
@@ -70,16 +69,5 @@ def fetch_all_teams():
 
     print(f"JSON data successfully saved to {json_filename}")
 
-    # Push JSON to GitHub
-    try:
-        repo_path = os.path.abspath(".")  # Path to the Git repository
-        subprocess.run(["git", "-C", repo_path, "add", json_filename], check=True)
-        subprocess.run(["git", "-C", repo_path, "commit", "-m", "Update vbdb_teams.json"], check=True)
-        subprocess.run(["git", "-C", repo_path, "push", "origin", "master"], check=True) 
-        print("Successfully pushed changes to GitHub.")
-    except subprocess.CalledProcessError as e:
-        print(f"Error during Git operations: {e}")
-
 if __name__ == "__main__":
     fetch_all_teams()
-
