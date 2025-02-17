@@ -19,7 +19,7 @@ jobs:
         uses: astral-sh/setup-uv@v5
       
       - name: Set up Python
-        run: uv python install
+        uses: actions/setup-python@v4
         with:
           python-version-file: "pyproject.toml"
       
