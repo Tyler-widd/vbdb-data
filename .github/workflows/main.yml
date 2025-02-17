@@ -7,7 +7,7 @@ on:
   schedule:
     - cron: '0 0 * * *'  # Run daily at midnight UTC
   workflow_dispatch:  # Allow manual triggering
-  run-script:
+  uv-example:
     name: python
     runs-on: ubuntu-latest
 
@@ -23,7 +23,7 @@ on:
           python-version-file: "pyproject.toml"
 
 jobs:
-  uv-example:
+  install_job:
     name: python
     runs-on: ubuntu-latest
 
