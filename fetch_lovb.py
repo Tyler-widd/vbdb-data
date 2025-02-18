@@ -88,13 +88,9 @@ class LOVB:
                     print(f"Warning: No roster table found at {url}")
                     continue
 
-                all_rows = []
-
                 # Loop through each table
                 for table in tables:
                     headers = [header.text.strip() for header in table.find_all('th')]
-
-                    rows = []
 
                     # Extract data from each row in the table
                     for row in table.find_all('tr')[1:]:  # Skip the header row
@@ -102,6 +98,7 @@ class LOVB:
 
                         if columns:
                             row_data = {}
+                            row_data['url'] = url  # Store URL for team name extraction later
 
                             # Extract and clean up the player's name and number from the first column
                             player_name_column = columns[0].get_text(strip=True)
@@ -123,41 +120,80 @@ class LOVB:
                             # Add the player number and name to the dictionary
                             row_data['Player Number'] = player_number
                             row_data['Name'] = player_name
-                            row_data['url'] = url
 
                             # For each other column, map it to the corresponding header
                             for header, column in zip(headers[1:], columns[1:]):
                                 column_text = column.get_text(strip=True)
                                 row_data[header] = column_text
 
-                            # Add the row's dictionary to the rows list
-                            rows.append(row_data)
-
-                    # Append the rows of this table to the all_rows list
-                    all_rows.extend(rows)
-
-                # Append the all rows of this URL to all_data
-                all_data.extend(all_rows)
+                            # Add the row's dictionary to all_data
+                            all_data.append(row_data)
 
             except Exception as e:
                 print(f"Error processing {url}: {e}")
 
-        # Close the driver after scraping is complete
-        driver.quit()
+        # Now process all the data after collecting it
+        processed_data = []
+        for item in all_data:
+            # Determine team name from URL
+            if 'atlanta' in item['url']:
+                team_name = 'Atlanta'
+            elif 'salt' in item['url']:
+                team_name = 'Salt Lake'  
+            elif 'austin' in item['url']:
+                team_name = 'Austin'
+            elif 'houston' in item['url']:
+                team_name = 'Houston'
+            elif 'madison' in item['url']:
+                team_name = 'Madison'
+            elif 'omaha' in item['url']:
+                team_name = 'Omaha'
+            else:
+                team_name = None
 
-        df = pd.DataFrame(all_data)
-        df['Position'] = np.where(df['Position'].isna(), df['Title'], df['Position'])
-        df['Player Number'] = df['Player Number']
-        df['Player Number'] = np.where(df['Player Number'] == '', 'Staff', df['Player Number'])
-        df['Team Name'] = np.where(df['url'].str.contains('atlanta'), 'Atlanta',
-                                   np.where(df['url'].str.contains('salt'), 'Salt Lake',
-                                            np.where(df['url'].str.contains('austin'), 'Austin',
-                                                     np.where(df['url'].str.contains('houston'), 'Houston',
-                                                              np.where(df['url'].str.contains('madison'), 'Madison',
-                                                                       np.where(df['url'].str.contains('omaha'), 'Omaha', None))))))
-        df.drop(columns=['Title', 'Follow', 'url'], inplace=True)
-
-        return df
+            # Create links
+            player_url = "https://www.lovb.com/teams/lovb-" + team_name.lower() + "-volleyball/athletes/" + item['Name'].replace(' ', '-').lower()
+            
+            # Create processed entry with all transformations
+            processed_entry = {
+                '#': item['Player Number'] if item['Player Number'] != '' else 'Staff',
+                'Name': item['Name'],
+                'Player URL': player_url,
+                'team_name': team_name,
+                'Team Name': team_name,  # Keep both for backward compatibility
+                'division': 'Pro',
+                'team_short': team_name,
+                'conference_name': 'LOVB',
+                'conference_short': 'LOVB',
+            }
+            
+            # Handle position mapping
+            position = item.get('Position', item.get('Title', ''))
+            if position == 'Opposite Hitter':
+                processed_entry['Position'] = 'OPP'
+            elif position == 'Middle Blocker':
+                processed_entry['Position'] = 'MB'
+            elif position == 'Setter':
+                processed_entry['Position'] = 'S'
+            elif position == 'Outside Hitter':
+                processed_entry['Position'] = 'OH'
+            elif position == 'Libero':
+                processed_entry['Position'] = 'L'
+            else:
+                processed_entry['Position'] = position
+            
+            # Rename columns
+            if 'College / Home Club' in item:
+                processed_entry['Hometown'] = item['College / Home Club']
+            
+            # Copy any other fields we want to keep
+            for key, value in item.items():
+                if key not in ['Title', 'Follow', 'url', 'Player Number', 'College / Home Club'] and key not in processed_entry:
+                    processed_entry[key] = value
+            
+            processed_data.append(processed_entry)
+        
+        return processed_data
 
     # Method to fetch and process schedule
     def fetch_schedule(self):

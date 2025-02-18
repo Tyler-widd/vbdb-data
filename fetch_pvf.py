@@ -176,71 +176,70 @@ class PVF:
         return schedule
 
     # Method to fetch and process players
-    def fetch_players(self, roster_id):
+    def fetch_players(self):
         """
-        Fetches the roster of volleyball players for a given team from the PVF API.
-
-        Arguments
-        ---------
-        roster_id : str
-            The ID of the team's roster to be fetched. For example, use '40' to fetch players for a specific roster.
-            `current_roster_id` can be found in the fetch_teams function
+        Fetches the roster of volleyball players for all teams from the PVF API.
 
         Example
         -------
             >>> pvf = PVF(api_url='https://provolleyball.com/api/rosters/')
-            >>> players = pvf.fetch_players(roster_id='40')
+            >>> players = pvf.fetch_players()
             >>> len(players)
-            12
+            120
 
         Returns
         -------
         **list[dict]**: A list of player entries, each represented as a dictionary containing player details, 
             such as name, position, height, college, and team name.
         """
-
-        # Fetch JSON data
-        url = f"https://provolleyball.com/api/rosters/{roster_id}/player-rosters?include%5B1%5D=headshotImage&include%5B2%5D=player.headshotImage&include%5B3%5D=positions&sort%5B0%5D=players.last_name"
-        response = requests.get(url, params={"roster_id": roster_id})
-        response.raise_for_status()
-        rosters = response.json().get('data', [])
-
-        # Initialize the players list
+        teams = self.fetch_teams()
         players = []
 
-        # Process each roster entry
-        for roster in rosters:
-            # Extract player details
-            player_id = roster.get("player_id", "")
-            full_name = roster.get("player", {}).get("full_name", "")
-            college = roster.get("player", {}).get("college", "")
-            hometown = roster.get("player", {}).get("hometown", "")
-            height = f"{roster.get('player', {}).get('height_feet', '')}'{roster.get('player', {}).get('height_inches', '')}"
-            jersey_number = roster.get("player", {}).get("jersey_number", "")
-            headshot_image = roster.get("player", {}).get("headshot_image", {}).get("src", "")
-            pro_experience = roster.get("player", {}).get("pro_experience", "")
-            player_positions = ", ".join(pos.get('name') for pos in roster.get("player_positions", []))
-            team = " ".join(word.title() for word in roster.get("permalink", "").split("/")[2].split('-'))
+        for roster_ids in teams:
+            roster_id = roster_ids['current_roster_id']
+            try:
+                url = f"https://provolleyball.com/api/rosters/{roster_id}/player-rosters?include%5B1%5D=headshotImage&include%5B2%5D=player.headshotImage&include%5B3%5D=positions&sort%5B0%5D=players.last_name"
+                response = requests.get(url, params={"roster_id": roster_id})
+                response.raise_for_status()
+                rosters = response.json().get('data', [])
 
-            # Combine the details into the desired player entry structure
-            player_entry = {
-                "player_id": player_id,
-                "full_name": full_name,
-                "college": college,
-                "hometown": hometown,
-                "height": height,
-                "jersey_number": jersey_number,
-                "headshot_image": headshot_image,
-                "pro_experience": pro_experience,
-                "player_positions": player_positions,
-                "team": team,
-            }
+                for roster in rosters:
+                    player_id = roster.get("player_id", "")
+                    full_name = roster.get("player", {}).get("full_name", "")
+                    college = roster.get("player", {}).get("college", "")
+                    hometown = roster.get("player", {}).get("hometown", "")
+                    height_feet = roster.get('player', {}).get('height_feet', '')
+                    height_inches = roster.get('player', {}).get('height_inches', '')
+                    height = f"{height_feet}'{height_inches}" if height_feet and height_inches else "Unknown"
+                    jersey_number = roster.get("player", {}).get("jersey_number", "")
+                    pro_experience = roster.get("player", {}).get("pro_experience", "")
+                    player_positions = ", ".join(pos.get('name') for pos in roster.get("player_positions", []))
+                    team = " ".join(word.title() for word in roster.get("permalink", "").split("/")[2].split('-'))
+                    url = "https://provolleyball.com" + roster.get('player', {}).get('permalink', '')
+                    
 
-            # Add the player entry to the players list
-            players.append(player_entry)
+                    player_entry = {
+                        "player_id": player_id,
+                        "full_name": full_name,
+                        "college": college,
+                        "hometown": hometown,
+                        "height": height,
+                        "jersey_number": jersey_number,
+                        "pro_experience": pro_experience,
+                        "player_positions": player_positions,
+                        "team": team,
+                        "Player URL": url,
+                        "conference_name": 'PVF',
+                        "conference_short": 'PVF',
+                        'division': 'Pro',
+                    }
+
+                    players.append(player_entry)
+            except requests.exceptions.RequestException as e:
+                print(f"Error fetching players for roster_id {roster_id}: {e}")
 
         return players
-
+    
     # Method to fetch team stats for the season
     def fetch_team_stats(self):
         """

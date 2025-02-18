@@ -74,7 +74,7 @@ class NCAA:
         df.rename(columns={0: 'team_id', 1: 'team_name'}, inplace=True)
 
 
-        json_data = requests.get(f"https://web3.ncaa.org/directory/api/directory/memberList?type=12&sportCode={gender}VB").json()
+        json_data = requests.get(f"https://web3.ncaa.org/directory/api/directory/memberList?type=12&sportCode={gender}VB&").json()
         teams_dict = []
         for json in json_data:
             teams_dict.append({
@@ -95,7 +95,7 @@ class NCAA:
         team_data = []
 
         # Loop through each team_id
-        for team_id in df['team_id'].unique():
+        for team_id in teams_df['team_id'].unique():
             url = f'https://web3.ncaa.org/directory/orgDetail?id={team_id}'
             response = requests.get(url, headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
@@ -207,9 +207,14 @@ class NCAA:
         # Merge the roster information with the other team data
         final_df = pd.merge(roster_list_df, df, on='team_id')
         final_final_df = pd.merge(final_df, teams_df, on='team_id')
+        final_data = final_final_df[['#', 'Name', 'Class', 'Position', 'Height', 'Hometown', 
+                               'High School', 'Player URL', 'team_id', 'head_coach', 
+                               'division_hist_url', 'division', 'team_name', 'team_short', 
+                               'conference_name', 'conference_short', 'state', 'sportRegion', 
+                               'school_url', 'school_athletic_url']].to_dict(orient='records')
 
         # Return the final DataFrame with the desired columns
-        return final_final_df[['#', 'Name', 'Class', 'Position', 'Height', 'Hometown', 'High School', 'Player URL', 'team_id', 'head_coach', 'division_hist_url', 'division', 'team_name', 'team_short', 'conference_name', 'conference_short', 'state', 'sportRegion', 'school_url', 'school_athletic_url']]
+        return final_data
 
     def fetch_teams_history(self, gender, team_id):
         """
