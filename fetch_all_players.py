@@ -19,7 +19,7 @@ def fetch_and_combine_players():
     # Create a unified structure for all players
     all_players = []
     
-    # Process LOVB players
+    # # Process LOVB players
     for player in lovb_roster:
         all_players.append({
             "name": player.get('Name', ''),
@@ -39,8 +39,9 @@ def fetch_and_combine_players():
             "head_coach": None,
             "data_source": "LOVB"
         })
+    print(lovb_roster)
     
-    # Process PVF players
+    # # Process PVF players
     for player in pvf_roster:
         all_players.append({
             "name": player.get('full_name', ''),
@@ -60,8 +61,9 @@ def fetch_and_combine_players():
             "head_coach": None,
             "data_source": "PVF"
         })
+    print(pvf_roster)
     
-    # Process NCAA Men players
+    # # Process NCAA Men players
     for player in ncaa_men:
         all_players.append({
             "name": player.get('Name', ''),
@@ -81,6 +83,7 @@ def fetch_and_combine_players():
             "head_coach": player.get('head_coach', ''),
             "data_source": "NCAA"
         })
+    print(ncaa_men)
     
     # Process NCAA Women players
     for player in ncaa_women:
@@ -102,9 +105,12 @@ def fetch_and_combine_players():
             "head_coach": player.get('head_coach', ''),
             "data_source": "NCAA"
         })
+    print(ncaa_women)
     
     # Ensure data directory exists
     os.makedirs("data", exist_ok=True)
+    
+    print(all_players)
     
     # Save combined data to JSON file
     json_filename = "data/vbdb_players.json"
@@ -117,4 +123,4 @@ def fetch_and_combine_players():
     return all_players
 
 if __name__ == "__main__":
-    fetch_and_combine_players()
+    print(fetch_and_combine_players())

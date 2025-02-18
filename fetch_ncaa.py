@@ -142,14 +142,13 @@ class NCAA:
             url = f'https://stats.ncaa.org/teams/history/{gender}VB/{team_id}'
             response = requests.get(
                 url,
-                headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
+                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
                 },
             )
 
             soup = BeautifulSoup(response.content, "html.parser")
             try:
-                if soup.find('td') and soup.find('td').text == '2024-25':
+                if soup.find('td') and soup.find('td').text == '2025-26':
                     roster_link = soup.find('td').find('a')['href']
                     conference_short = soup.find_all('tr')[1].find_all('td')[3].text
                     response = requests.get(
@@ -194,9 +193,15 @@ class NCAA:
                     roster_df['team_id'] = team_id
                     roster_df['conference_short'] = conference_short
                     roster_df['team_id'] = roster_df['team_id'].astype(str)
+                    roster_list.append(roster_df)
 
                     # Append to the roster_list (this was previously inside the loop where it was resetting)
-                    roster_list.append(roster_df)
+                    if roster_list:
+                        roster_list_df = pd.concat(roster_list).reset_index(drop=True)
+                        # Continue with the rest of your code
+                    else:
+                        print("No roster data found. Check the team IDs or the website structure.")
+                        return [] 
 
             except Exception as e:
                 print(f"Error processing team_id {team_id}: {e}")
