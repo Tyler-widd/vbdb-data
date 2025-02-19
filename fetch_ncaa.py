@@ -69,154 +69,156 @@ class NCAA:
                 - url
         """
         # Get all team codes and clean a bit of data
-        df = pd.read_html('https://stats.ncaa.org/game_upload/team_codes')[0]
-        df = df[(df[0] != 'NCAA Codes') & (df[0] != 'ID')]
-        df.rename(columns={0: 'team_id', 1: 'team_name'}, inplace=True)
+        df = pd.read_html("https://stats.ncaa.org/game_upload/team_codes")[0]
+        df = df[(df[0] != "NCAA Codes") & (df[0] != "ID")]
+        df.rename(columns={0: "team_id", 1: "team_name"}, inplace=True)
 
 
-        json_data = requests.get(f"https://web3.ncaa.org/directory/api/directory/memberList?type=12&sportCode={gender}VB&").json()
+        json_data = requests.get(
+            f"https://web3.ncaa.org/directory/api/directory/memberList?type=12&sportCode={gender}VB&"
+        ).json()
+        print(json_data)
         teams_dict = []
         for json in json_data:
-            teams_dict.append({
-                'team_id': json['orgId'],
-                'team_name': json['nameOfficial'],
-                'conference_id': json['conferenceId'],
-                'conference_name': json['conferenceName'],
-                'school_url': json['webSiteUrl'],
-                'division': json['divisionRoman'],
-                'school_athletic_url': json['athleticWebUrl'],
-                'sportRegion': json['sportRegion'],
-                'state': json['memberOrgAddress']['state']
-                })
+            teams_dict.append(
+                {
+                    "team_id": json["orgId"],
+                    "team_name": json["nameOfficial"],
+                    "conference_id": json["conferenceId"],
+                    "conference_name": json["conferenceName"],
+                    "school_url": json["webSiteUrl"],
+                    "division": json["divisionRoman"],
+                    "school_athletic_url": json["athleticWebUrl"],
+                    "sportRegion": json["sportRegion"],
+                    "state": json["memberOrgAddress"]["state"],
+                }
+            )
         teams_df = pd.json_normalize(teams_dict)
-        teams_df['team_id'] = teams_df['team_id'].astype(str)
-
+        teams_df["team_id"] = teams_df["team_id"].astype(str)
+        print(teams_df)
         # List to store team data
         team_data = []
 
         # Loop through each team_id
-        for team_id in teams_df['team_id'].unique():
-            url = f'https://web3.ncaa.org/directory/orgDetail?id={team_id}'
-            response = requests.get(url, headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
-            })
+        for team_id in teams_df["team_id"].unique():
+            url = f"https://web3.ncaa.org/directory/orgDetail?id={team_id}"
+            response = requests.get(
+                url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
+                },
+            )
 
             # Parse HTML
             soup = BeautifulSoup(response.content, "html.parser")
 
             # Find the specific table
-            table = soup.find('table', attrs={'class': 'table table-responsive table-condensed table-striped'})
+            table = soup.find(
+                "table", attrs={"class": "table table-responsive table-condensed table-striped"}
+            )
             if not table:
                 continue
 
-            rows = table.find_all('tr')
+            rows = table.find_all("tr")
             for row in rows[1:]:  # Skip header row
-                columns = row.find_all('td')
-                if gender == 'W':
+                columns = row.find_all("td")
+                if gender == "W":
                     gender_text = "Women's"
                 else:
                     gender_text = "Men's"
                 if columns and columns[0].text.strip() == f"{gender_text} Volleyball":
-                    team_data.append({
-                        'team_id': team_id,
-                        'head_coach': columns[1].text.strip(),
-                        'division_hist_url': columns[2].text.strip(),
-                        'conference': columns[3].text.strip()
-                    })
+                    team_data.append(
+                        {
+                            "team_id": team_id,
+                            "head_coach": columns[1].text.strip(),
+                            "division_hist_url": columns[2].text.strip(),
+                            "conference": columns[3].text.strip(),
+                        }
+                    )
 
         df = pd.json_normalize(team_data)
-        df['head_coach'] = df['head_coach'].apply(lambda x: " ".join(x.split()) if isinstance(x, str) else x)
-        
-        teams = pd.read_html('https://stats.ncaa.org/game_upload/team_codes')[0]
-        teams = teams[(teams[0] != 'NCAA Codes') & (teams[0] != 'ID')]
-        teams.rename(columns={0: 'team_id', 1: 'team_short'}, inplace=True)
-        teams['team_id'] = teams['team_id'].astype(str)
-        df['team_id'] = df['team_id'].astype(str)
-        df = pd.merge(df, teams, on = 'team_id')
-        
-        team_ids = list(df['team_id'].dropna().unique())
-        
+        df["head_coach"] = df["head_coach"].apply(
+            lambda x: " ".join(x.split()) if isinstance(x, str) else x
+        )
+
+        teams = pd.read_html("https://stats.ncaa.org/game_upload/team_codes")[0]
+        teams = teams[(teams[0] != "NCAA Codes") & (teams[0] != "ID")]
+        teams.rename(columns={0: "team_id", 1: "team_short"}, inplace=True)
+        teams["team_id"] = teams["team_id"].astype(str)
+        df["team_id"] = df["team_id"].astype(str)
+        df = pd.merge(df, teams, on="team_id")
+
+        team_ids = list(df["team_id"].dropna().unique())
+        print(team_ids)
         roster_list = []
 
         for team_id in team_ids:
-            url = f'https://stats.ncaa.org/teams/history/{gender}VB/{team_id}'
+            url = f"https://stats.ncaa.org/teams/history/{gender}VB/{team_id}"
             response = requests.get(
                 url,
-                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
                 },
             )
 
             soup = BeautifulSoup(response.content, "html.parser")
-            try:
-                if soup.find('td') and soup.find('td').text == '2025-26':
-                    roster_link = soup.find('td').find('a')['href']
-                    conference_short = soup.find_all('tr')[1].find_all('td')[3].text
-                    response = requests.get(
-                        "https://stats.ncaa.org" + roster_link + "/roster",
-                        headers={
-                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
-                        },
-                    )
+            roster_link = soup.find('td').find('a')['href']
+            conference_short = soup.find_all('tr')[1].find_all('td')[3].text
+            response = requests.get(
+                "https://stats.ncaa.org" + roster_link + "/roster",
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
+                },
+            )
 
-                    soup = BeautifulSoup(response.content, "html.parser")
-                    
-                    table = soup.find('table', {'id': lambda x: x and x.startswith('rosters_form_players')})
+            soup = BeautifulSoup(response.content, "html.parser")
+            
+            table = soup.find('table', {'id': lambda x: x and x.startswith('rosters_form_players')})
 
-                    # Extract headers
-                    headers = [th.text.strip() for th in table.find('thead').find_all('th')]
+            # Extract headers
+            headers = [th.text.strip() for th in table.find('thead').find_all('th')]
 
-                    # Add a header for the player URL
-                    headers.append('Player URL')
+            # Add a header for the player URL
+            headers.append('Player URL')
 
-                    # Extract rows
-                    rows = []
-                    for tr in table.find('tbody').find_all('tr'):
-                        cells = tr.find_all('td')
-                        row = []
-                        player_url = None  # Placeholder for the player URL
-                        
-                        for cell in cells:
-                            # Check if the cell contains a link
-                            link = cell.find('a')
-                            if link:
-                                row.append(link.text.strip())  # Append the name
-                                player_url = link['href']    # Save the href for later
-                            else:
-                                row.append(cell.text.strip())  # Append regular cell text
-                        
-                        # Append the player URL as a separate field
-                        row.append(player_url)
-                        rows.append(row)
-
-                    # Create DataFrame for the current team
-                    roster_df = pd.DataFrame(rows, columns=headers)
-                    roster_df['team_id'] = team_id
-                    roster_df['conference_short'] = conference_short
-                    roster_df['team_id'] = roster_df['team_id'].astype(str)
-                    roster_list.append(roster_df)
-
-                    # Append to the roster_list (this was previously inside the loop where it was resetting)
-                    if roster_list:
-                        roster_list_df = pd.concat(roster_list).reset_index(drop=True)
-                        # Continue with the rest of your code
+            # Extract rows
+            rows = []
+            for tr in table.find('tbody').find_all('tr'):
+                cells = tr.find_all('td')
+                row = []
+                player_url = None  # Placeholder for the player URL
+                
+                for cell in cells:
+                    # Check if the cell contains a link
+                    link = cell.find('a')
+                    if link:
+                        row.append(link.text.strip())  # Append the name
+                        player_url = link['href']    # Save the href for later
                     else:
-                        print("No roster data found. Check the team IDs or the website structure.")
-                        return [] 
+                        row.append(cell.text.strip())  # Append regular cell text
+                
+                # Append the player URL as a separate field
+                row.append(player_url)
+                rows.append(row)
 
-            except Exception as e:
-                print(f"Error processing team_id {team_id}: {e}")
+            # Create DataFrame for the current team
+            roster_df = pd.DataFrame(rows, columns=headers)
+            roster_df['team_id'] = team_id
+            roster_df['conference_short'] = conference_short
+            roster_df['team_id'] = roster_df['team_id'].astype(str)
+            roster_list.append(roster_df)
 
-        # Concatenate all the roster data into a single DataFrame
-        roster_list_df = pd.concat(roster_list).reset_index(drop=True)
+            # Append to the roster_list (this was previously inside the loop where it was resetting)
+            if roster_list:
+                roster_list_df = pd.concat(roster_list).reset_index(drop=True)
 
-        # Merge the roster information with the other team data
         final_df = pd.merge(roster_list_df, df, on='team_id')
         final_final_df = pd.merge(final_df, teams_df, on='team_id')
         final_data = final_final_df[['#', 'Name', 'Class', 'Position', 'Height', 'Hometown', 
-                               'High School', 'Player URL', 'team_id', 'head_coach', 
-                               'division_hist_url', 'division', 'team_name', 'team_short', 
-                               'conference_name', 'conference_short', 'state', 'sportRegion', 
-                               'school_url', 'school_athletic_url']].to_dict(orient='records')
+                                'High School', 'Player URL', 'team_id', 'head_coach', 
+                                'division_hist_url', 'division', 'team_name', 'team_short', 
+                                'conference_name', 'conference_short', 'state', 'sportRegion', 
+                                'school_url', 'school_athletic_url']].to_dict(orient='records')
 
         # Return the final DataFrame with the desired columns
         return final_data
@@ -638,3 +640,9 @@ class NCAA:
                 pbp_data.append(match_stats)
             df = pd.concat(pbp_data)
             return pbp_data
+
+
+ncaa = NCAA()
+ncaa_men = ncaa.fetch_players(gender='M')
+
+print(ncaa_men)
