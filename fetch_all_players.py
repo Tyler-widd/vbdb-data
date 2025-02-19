@@ -1,6 +1,6 @@
 import json
 import os
-
+import requests
 def fetch_and_combine_players():
     # Initialize fetchers
     from fetch_lovb import LOVB
