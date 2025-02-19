@@ -640,9 +640,3 @@ class NCAA:
                 pbp_data.append(match_stats)
             df = pd.concat(pbp_data)
             return pbp_data
-
-
-ncaa = NCAA()
-ncaa_men = ncaa.fetch_players(gender='M')
-
-print(ncaa_men)
