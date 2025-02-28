@@ -7819,13 +7819,6 @@
         "division": 3
     },
     {
-        "name": "University of Texas Permian Basin",
-        "url": "www.utpbfalcons.com",
-        "conference": "Lone Star Conference",
-        "level": "NCAA Women",
-        "division": 2
-    },
-    {
         "name": "The University of Texas Rio Grande Valley",
         "url": "goutrgv.com",
         "conference": "Southland Conference",
@@ -8109,6 +8102,13 @@
         "name": "Ursuline College",
         "url": "www.ursulinearrows.com",
         "conference": "Great Midwest Athletic Conference",
+        "level": "NCAA Women",
+        "division": 2
+    },
+    {
+        "name": "The University of Texas Permian Basin",
+        "url": "www.utpbfalcons.com",
+        "conference": "Lone Star Conference",
         "level": "NCAA Women",
         "division": 2
     },
