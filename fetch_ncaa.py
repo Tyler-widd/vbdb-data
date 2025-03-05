@@ -818,27 +818,27 @@ class NCAA:
 
         return results
 
-# Example usage
-if __name__ == "__main__":
-    ncaa = NCAA(gender='W')
+# # Example usage
+# if __name__ == "__main__":
+#     ncaa = NCAA(gender='W')
     
-    # Example 1: Fetch NCAA teams
-    teams = ncaa.fetch_ncaa_teams()
-    print(f"Retrieved {len(teams)} teams")
+#     # Example 1: Fetch NCAA teams
+#     teams = ncaa.fetch_ncaa_teams()
+#     print(f"Retrieved {len(teams)} teams")
     
-    # Example 2: Fetch schedule for a specific division
-    #div_schedules = ncaa.fetch_schedule('I')  # Division I only
-    #print(f"Retrieved {len(div_schedules)} Division I schedule entries")
+#     # Example 2: Fetch schedule for a specific division
+#     #div_schedules = ncaa.fetch_schedule('I')  # Division I only
+#     #print(f"Retrieved {len(div_schedules)} Division I schedule entries")
     
-    # Example 3: Fetch a specific team's schedule
-    if len(teams) > 0:
-        team_ids = teams['orgId'].iloc[0:2]
-        df_list = []
-        for team_id in team_ids:
-            team_schedule = ncaa.fetch_schedule_for_team(team_id, '2024-25')
-            df_list.append(team_schedule)
+#     # Example 3: Fetch a specific team's schedule
+#     if len(teams) > 0:
+#         team_ids = teams['orgId'].iloc[0:2]
+#         df_list = []
+#         for team_id in team_ids:
+#             team_schedule = ncaa.fetch_schedule_for_team(team_id, '2024-25')
+#             df_list.append(team_schedule)
         
-        df = pd.concat(df_list)
-        print(df)
-        print(f"Retrieved {len(df)} games for team {team_ids}")
+#         df = pd.concat(df_list)
+#         print(df)
+#         print(f"Retrieved {len(df)} games for team {team_ids}")
 
