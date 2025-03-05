@@ -1,5 +1,7 @@
 import pandas as pd
+
 from fetch_ncaa import NCAA
+
 
 def fetch_and_combine_results():
     """Fetch and combine NCAA volleyball schedules for both men's and women's teams."""
@@ -15,7 +17,7 @@ def fetch_and_combine_results():
         total_w = len(teams_w)
         print(f"Found {total_w} women's teams. Starting to fetch schedules...")
         
-        for i, team_id in enumerate(teams_w['orgId']):
+        for i, team_id in enumerate(teams_w['orgId'][0:4]):
             try:
                 print(f"Fetching women's schedule {i+1}/{total_w} for team ID: {team_id}")
                 team_schedule = ncaa_w.fetch_schedule_for_team(team_id, '2024-25')
@@ -38,7 +40,7 @@ def fetch_and_combine_results():
         total_m = len(teams_m)
         print(f"Found {total_m} men's teams. Starting to fetch schedules...")
         
-        for i, team_id in enumerate(teams_m['orgId']):
+        for i, team_id in enumerate(teams_m['orgId'][0:4]):
             try:
                 print(f"Fetching men's schedule {i+1}/{total_m} for team ID: {team_id}")
                 team_schedule = ncaa_m.fetch_schedule_for_team(team_id, '2024-25')
@@ -56,6 +58,7 @@ def fetch_and_combine_results():
     if df_list:
         df = pd.concat(df_list, ignore_index=True)
         print(f"\nCombined data: {len(df)} total games across {len(df_list)} teams")
+        df.to_csv("data/cbvb_ncaa_results.csv", index=False)
         return df
     else:
         print("No schedule data was successfully retrieved")
@@ -64,6 +67,4 @@ def fetch_and_combine_results():
 if __name__ == "__main__":
     result = fetch_and_combine_results()
     # Uncomment to save to CSV
-    result.to_csv("data/cbvb_ncaa_results.csv", index=False)
-    print("\nFinal DataFrame:")
     print(result)
