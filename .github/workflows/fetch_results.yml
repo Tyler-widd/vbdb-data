@@ -1,0 +1,49 @@
+name: Run fetch_results
+
+permissions:
+  contents: write  # Change from 'read' to 'write' to allow pushing
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Fixed cron expression
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  install_job:
+    name: Run Python Script
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub's automatically provided token
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'  # Or specify with python-version-file
+      
+      - name: Install the project
+        run: uv sync --all-extras --dev
+      
+      - name: Run fetch_results.py
+        run: uv run fetch_results.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.VOLLEYBALLDATABASED }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+      
+      - name: Commit and push if changes
+        run: |
+          if [[ -z $(git status -s data/vbdb_results.csv) ]]; then
+            echo "No changes to commit"
+          else
+            git add data/vbdb_results.csv
+            git commit -m "Update vbdb_results.csv [skip ci]"
+            git push
+          fi
