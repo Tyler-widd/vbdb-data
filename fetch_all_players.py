@@ -18,7 +18,7 @@ def fetch_and_combine_players():
     
     # Create a unified structure for all players
     all_players = []
-    
+     
     # # Process LOVB players
     for player in lovb_roster:
         all_players.append({
