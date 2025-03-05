@@ -205,7 +205,7 @@ class NCAA:
         teams = self.fetch_ncaa_teams()
 
         # Start process to get schedule
-        url = "https://stats.ncaa.org" + self.fetch_team_season(url=f"https://stats.ncaa.org/teams/history/WVB/{team_id}", year=year)
+        url = "https://stats.ncaa.org" + self.fetch_team_season(url=f"https://stats.ncaa.org/teams/history/{self.gender}VB/{team_id}", year=year)
         print(url)
         soup = self.fetch_html_soup(url)
 

@@ -17,7 +17,7 @@ def fetch_and_combine_results():
         total_w = len(teams_w)
         print(f"Found {total_w} women's teams. Starting to fetch schedules...")
         
-        for i, team_id in enumerate(teams_w['orgId'][0:4]):
+        for i, team_id in enumerate(teams_w['orgId']):
             try:
                 print(f"Fetching women's schedule {i+1}/{total_w} for team ID: {team_id}")
                 team_schedule = ncaa_w.fetch_schedule_for_team(team_id, '2024-25')
@@ -40,7 +40,7 @@ def fetch_and_combine_results():
         total_m = len(teams_m)
         print(f"Found {total_m} men's teams. Starting to fetch schedules...")
         
-        for i, team_id in enumerate(teams_m['orgId'][0:4]):
+        for i, team_id in enumerate(teams_m['orgId']):
             try:
                 print(f"Fetching men's schedule {i+1}/{total_m} for team ID: {team_id}")
                 team_schedule = ncaa_m.fetch_schedule_for_team(team_id, '2024-25')
