@@ -1,5 +1,5 @@
 import pandas as pd
-
+import os
 from fetch_ncaa import NCAA
 
 
@@ -58,7 +58,15 @@ def fetch_and_combine_results():
     if df_list:
         df = pd.concat(df_list, ignore_index=True)
         print(f"\nCombined data: {len(df)} total games across {len(df_list)} teams")
-        df.to_csv("data/cbvb_ncaa_results.csv", index=False)
+        
+        # Create data directory if it doesn't exist
+        os.makedirs("data", exist_ok=True)
+        
+        # Save with the correct filename that matches the workflow check
+        output_path = "data/vbdb_results.csv"
+        df.to_csv(output_path, index=False)
+        print(f"Data saved to {output_path}")
+        
         return df
     else:
         print("No schedule data was successfully retrieved")
@@ -66,5 +74,4 @@ def fetch_and_combine_results():
 
 if __name__ == "__main__":
     result = fetch_and_combine_results()
-    # Uncomment to save to CSV
-    print(result)
+    print(f"Final dataframe shape: {result.shape if not result.empty else 'Empty'}")
