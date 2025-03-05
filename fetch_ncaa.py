@@ -211,6 +211,9 @@ class NCAA:
 
         # get game by game urls
         data = soup.find('a', string='Game By Game')
+        if data is None:
+            print(f"No 'Game By Game' link found for team {team_id} in season {year}")
+            return pd.DataFrame()  # Return empty DataFrame
         gbg_url = "https://stats.ncaa.org" + data['href']
         
         # Use game by game url and get the soup from that url
@@ -219,8 +222,8 @@ class NCAA:
         game_rows = gbg_soup.find_all('tr', id=re.compile(r'^contest_\d+'))
         data = []
         for row in game_rows:
-            game_id = row['id'].replace('contest_', '')
-            game_id = game_id.replace('_defense', '')
+            match_id = row['id'].replace('contest_', '')
+            match_id = match_id.replace('_defense', '')
 
             date = row.find('td').text.strip()
             
@@ -293,7 +296,7 @@ class NCAA:
             result = result_cell.text.strip() if result_cell else ""
             
             data.append({
-                'game_id': game_id,
+                'match_id': match_id,
                 'date': date,
                 'team_id': team_id,
                 'opponent_name': opponent_name,
@@ -723,7 +726,7 @@ class NCAA:
             # Using fetch_schedule might not work directly with season_id
             # You may need to adjust how you get the match IDs
             sch_df = pd.DataFrame(self.fetch_schedule())
-            match_id_list = list(sch_df["game_id"].unique())
+            match_id_list = list(sch_df["match_id"].unique())
         except:
             # Fallback to directly using the season_id
             print(f"Using season ID directly: {season_id}")

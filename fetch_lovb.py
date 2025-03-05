@@ -72,7 +72,7 @@ class LOVB:
 
         driver = Driver(browser="chrome", headless=True)
         all_data = []
-        unwanted_terms = ["Founding Athlete", "NEW"]
+        unwanted_terms = ["Founding Athlete", "NEW", '-founding-athlete']
 
         for url in roster_urls:
             try:
@@ -197,132 +197,129 @@ class LOVB:
 
     # Method to fetch and process schedule
     def fetch_schedule(self):
-        """
-        Fetches teams the LOVB site.
+        """Scrape volleyball matches using the week containers approach"""
+        
+        url="https://www.lovb.com/schedule"
+        driver = Driver(browser="chrome", headless=True)
+        driver.get(url)  # Open the URL
+        print(f"Fetching {url}")
+        
+        # Wait for the page to load completely
+        driver.sleep(2)  # Add a small delay to ensure content loads
+        
+        page_source = driver.page_source
+        soup = BeautifulSoup(page_source, 'html.parser')
+        
+        # Find all week containers
+        week_containers = soup.find_all('div', attrs={'class': 'mb-lg grid w-full gap-lg'})
+        
+        all_matches = []
+        
+        for week_idx, week in enumerate(week_containers):
+            print(f"Processing week {week_idx+1}")
+            
+            # Find all matches within this week
+            matches = week.find_all('div', attrs={'class': '[&>header]:first-of-type:rounded-t-md'})
+            
+            # If no matches found with that specific class, try another approach
+            if not matches:
+                matches = week.find_all('div', attrs={'class': lambda x: x and 'flex-1' in x and '[&>header]' in x})
+            
+            for match_idx, match in enumerate(matches):
+                try:
+                    print(f"  Processing match {match_idx+1}")
+                    
+                    # Get date for this match
+                    date_div = match.find('div', attrs={'class': 'flex items-center gap-sm text-text-secondary'})
+                    date = date_div.text.strip() if date_div else "Date not found"
+                    
+                    # Get match details link
+                    match_details_link_elem = match.find('a', attrs={'class': 'link-hover flex items-center gap-sm text-xs'})
+                    match_details_link = match_details_link_elem['href'] if match_details_link_elem and match_details_link_elem.has_attr('href') else ""
+                    
+                    # Find the section with teams and scores
+                    section = match.find('section')
+                    if not section:
+                        print("  No section found, skipping match")
+                        continue
+                    
+                    # Get teams
+                    team_links = section.find_all('a', class_='group link-hover flex items-center gap-sm')
+                    
+                    teams = []
+                    for team_link in team_links:
+                        team_text_div = team_link.find('div', class_='text-pretty text-sm')
+                        if team_text_div:
+                            team_text = team_text_div.text.strip()
+                            teams.append(team_text)
+                    
+                    if len(teams) < 2:
+                        print("  Not enough teams found, skipping match")
+                        continue
+                    
+                    team_1 = teams[0]
+                    team_2 = teams[1]
+                    print(f"  Teams: {team_1} vs {team_2}")
+                    
+                    # Get set scores
+                    set_scores_divs = section.find_all('div', class_='flex items-center gap-sm')
+                    
+                    team_1_set_wins = "0"
+                    team_2_set_wins = "0"
+                    team_1_set_scores = []
+                    team_2_set_scores = []
+                    
+                    score_divs_processed = 0
+                    
+                    for score_div in set_scores_divs:
+                        # Check if this div contains score information
+                        score_elements = score_div.find_all('div', class_=lambda x: x and 'size-4' in x)
+                        if not score_elements:
+                            continue
+                        
+                        # Get sets won
+                        sets_won_div = score_div.find('div', class_='text-pretty text-sm')
+                        sets_won = sets_won_div.text.strip() if sets_won_div else "0"
+                        
+                        # Get individual set scores
+                        set_scores = [elem.text.strip() for elem in score_elements]
+                        
+                        if score_divs_processed == 0:  # First team
+                            team_1_set_wins = sets_won
+                            team_1_set_scores = set_scores
+                            score_divs_processed += 1
+                        elif score_divs_processed == 1:  # Second team
+                            team_2_set_wins = sets_won
+                            team_2_set_scores = set_scores
+                            score_divs_processed += 1
+                            break  # We have both teams' scores, no need to continue
+                    
+                    # Format the score string
+                    score_parts = []
+                    for j in range(min(len(team_1_set_scores), len(team_2_set_scores))):
+                        score_parts.append(f"{team_1_set_scores[j]}-{team_2_set_scores[j]}")
+                    
+                    score_string = f"{team_1_set_wins}-{team_2_set_wins} [{', '.join(score_parts)}]"
+                    
+                    # Create match object
+                    match_data = {
+                        "date": date,
+                        "team_1": team_1,
+                        "team_2": team_2,
+                        "score": score_string,
+                        "match_url": "lovb.com" + match_details_link if match_details_link else ""
+                    }
+                    
+                    all_matches.append(match_data)
+                    print(f"  Match added: {match_data['team_1']} vs {match_data['team_2']}, Score: {match_data['score']}")
+                
+                except Exception as e:
+                    print(f"  Error processing match: {e}")
+        
+        driver.quit()
+        return all_matches
 
-        Example
-        -------
-            >>> lovb = LOVB()
-            >>> teams = lovb.fetch_schedule()
-            >>> len(teams)
-            42
 
-        Returns
-        -------
-        **list[dict]**: A list of schedule entries.
-        """
+lovb = LOVB()
 
-        # Get teams first to use to get other stuff
-        # Fetch teams and create a DataFrame
-        teams = self.fetch_teams()
-        df_teams = pd.DataFrame(teams)
-
-        # Target URL
-        url = "https://www.lovb.com/schedule"
-
-        # Fetch the page
-        response = requests.get(url)
-        response.raise_for_status()
-
-        # Parse the HTML
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        # Find all divs with the specific class
-        days = soup.find_all('div', attrs={"day-schedule"})
-
-        schedule = []
-
-        for i, day in enumerate(days):
-            try:
-                # Match ID
-                match_div = day.find('div', attrs={'xl:ml-auto'})
-                match_id = (
-                    "https://www.lovb.com" + match_div.find('a')['href']
-                    if match_div and match_div.find('a') else None
-                )
-                if match_id:
-                    match_id = match_id.replace("Salt Lake", "Salt-Lake")
-
-                # Input date
-                date_element = day.find('p', attrs={'class': 'hidden lg:block'})
-                input_date = date_element.text if date_element else None
-                cleaned_date = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', input_date) if input_date else None
-                cleaned_date_with_year = f"{cleaned_date}, 2025" if cleaned_date else None
-
-                # Parse date
-                if cleaned_date_with_year:
-                    try:
-                        if "•" in cleaned_date:
-                            match = re.search(r'(\w+, \w+ \d+).*?(\d{4})', cleaned_date_with_year)
-                            new_date = f"{match.group(1)}, {match.group(2)}"
-                            parsed_date = datetime.strptime(new_date, "%A, %B %d, %Y")
-                        else:
-                            parsed_date = datetime.strptime(cleaned_date_with_year, "%A, %B %d, %Y")
-                        date = parsed_date.strftime("%Y-%m-%d")
-                    except ValueError:
-                        date = None
-                else:
-                    date = None
-
-                # Location
-                location_element = day.find('p', attrs={'class': 'flex items-center text-card-headline-s'})
-                location = location_element.text.strip() if location_element else None
-
-                # Teams
-                teams = day.find_all('div', attrs={'class': 'text-pretty'})
-                if len(teams) >= 2:
-                    home_team_name = teams[2].text.strip()
-                    away_team_name = teams[0].text.strip()
-                    home_team_id = (
-                        df_teams.loc[df_teams['name'] == home_team_name, 'team_id'].values[0]
-                        if not df_teams.loc[df_teams['name'] == home_team_name].empty else None
-                    )
-                    away_team_id = (
-                        df_teams.loc[df_teams['name'] == away_team_name, 'team_id'].values[0]
-                        if not df_teams.loc[df_teams['name'] == away_team_name].empty else None
-                    )
-                else:
-                    home_team_name = away_team_name = None
-                    home_team_id = away_team_id = None
-
-                # Venue
-                venue_element = day.find('a', attrs={'class': 'text-card-headline-s link-hover link'})
-                venue = venue_element.text.strip() if venue_element else None
-
-                # Other fields (set to None by default)
-                title = None
-                status = None
-                volley_station_match_id = None
-                home_team_img = None
-                home_team_score = None
-                home_team_color = None
-                away_team_img = None
-                away_team_score = None
-                away_team_color = None
-
-                # Add match entry to schedule
-                match_entry = {
-                    "match_id": match_id,
-                    "title": title,
-                    "date": date,
-                    "location": location,
-                    "status": status,
-                    "volley_station_match_id": volley_station_match_id,
-                    "home_team_id": home_team_id,
-                    "home_team_name": home_team_name,
-                    "home_team_img": home_team_img,
-                    "home_team_score": home_team_score,
-                    "home_team_color": home_team_color,
-                    "away_team_id": away_team_id,
-                    "away_team_name": away_team_name,
-                    "away_team_img": away_team_img,
-                    "away_team_score": away_team_score,
-                    "away_team_color": away_team_color,
-                    "venue": venue
-                }
-
-                schedule.append(match_entry)
-            except Exception as e:
-                print(f"Error processing day {i + 1}: {e}")
-                continue
-        return schedule
+print(lovb.fetch_schedule())
