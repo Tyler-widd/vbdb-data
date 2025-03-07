@@ -18,7 +18,7 @@ class LOVB:
     # Method to fetch and process teams
     def fetch_teams(self):
         """
-        Fetches teams the LOVB site.
+        Fetches teams from the LOVB site.
 
         Example
         -------
@@ -29,7 +29,7 @@ class LOVB:
 
         Returns
         -------
-        **list[dict]**: A list of team entries.
+        list[dict]: A list of team entries.
         """
 
         # Target URL
@@ -45,18 +45,31 @@ class LOVB:
         # Find all divs with the specific class
         divs = soup.find_all('div', attrs={'class': 'card relative w-full overflow-hidden'})
 
-        # Loop through each div and extract the href or text inside the <a> tag
+        # SVG icons mapping
+        svg_icons = {
+            'LOVB Salt Lake': "https://lovb.com/team-cards/salt-lake-card.svg",
+            'LOVB Atlanta': "https://lovb.com/team-cards/atlanta-card.svg",
+            'LOVB Austin': "https://lovb.com/team-cards/austin-card.svg",
+            'LOVB Houston': "https://lovb.com/team-cards/houston-card.svg",
+            'LOVB Omaha': "https://lovb.com/team-cards/omaha-card.svg",
+            'LOVB Madison': "https://lovb.com/team-cards/madison-card.svg"
+        }
+
+        # Collect team data
         teams = []
         for card in divs:
             a_tag = card.find('a')
             if a_tag:
-                link = a_tag.get('href', 'No href found')  # Extract the link
-                
-                # Construct the team details
-                team_name = " ".join(link.split('teams')[1].split('lovb')[1].split("-")[:-1]).title().strip()
+                link = a_tag.get('href', 'No href found')
+
+                # Extract and format team name
+                team_name = "LOVB " + " ".join(link.split('teams')[1].split('lovb')[1].split("-")[:-1]).title().strip()
                 full_url = "https://www.lovb.com" + link
-                team_id = link.split('/')[-1]  # Extract team_id from the URL
-                
+                team_id = link.split('/')[-1]
+
+                # Get SVG icon URL or fallback to None
+                img_url = svg_icons.get(team_name, None)
+
                 # Append team info as a dictionary
                 teams.append({
                     'name': team_name,
@@ -64,6 +77,7 @@ class LOVB:
                     'team_id': team_id,
                     'schedule': full_url + "/schedule",
                     'roster': full_url + "/roster",
+                    'img': img_url
                 })
             else:
                 print("No <a> tag found in this card.")
@@ -335,6 +349,7 @@ class LOVB:
         
         return all_matches
 
+    # Method to fetch teams with logos
     def get_matches_with_logos(self):
         matches = self.fetch_results()
         
@@ -349,3 +364,4 @@ class LOVB:
             match['team_2_logo'] = corrected_icons.get(match['team_2'], "Logo not found")
         
         return matches
+

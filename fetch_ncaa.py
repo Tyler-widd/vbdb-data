@@ -41,6 +41,8 @@ class NCAA:
             "SIAC": "Southern Intercol. Ath. Conf.",
             "GNEC": "Great Northeast Athletic Conference",
             "MAC-Mid": "Middle Atlantic Conference Commonwealth",
+            "MAC-Atlantic": "Middle Atlantic Conferences",
+            "MAC-Atlantic": "Middle Atlantic Conference",
             "AMCC": "Allegheny Mountain Collegiate Conference",
             "E8": "Empire 8",
             "PAC": "Presidents' Athletic Conference",
@@ -122,7 +124,18 @@ class NCAA:
             "WCC": "West Coast Conference",
             "NJAC": "New Jersey Athletic Conference",
             "Pac-12": "Pac-12 Conference",
-            "WIAC": "Wisconsin Intercollegiate Athletic Conference"
+            "WIAC": "Wisconsin Intercollegiate Athletic Conference",
+            "MCVL": 'Midwest Collegiate Volleyball League',
+            "MIVA": 'Midwestern Intercollegiate Volleyball Association',
+            "NEVC": 'New England Volleyball Conference', 
+            "CC": 'Conference Carolinas',
+            "MPSF": 'Mountain Pacific Sports Federation', 
+            "BWC": 'Big West Conference',
+            "EIVA": 'Eastern Intercollegiate Volleyball Association',
+            "GNAC": 'Great Northeast Athletic Conference',
+            "CVC": 'Continental Volleyball Conference',
+            "UVC": 'United Volleyball Conference',
+            "SC": 'Skyline Conference',
         }
 
         self.reverse_mapping = {v: k for k, v in self.conference_mapping.items()}
@@ -184,6 +197,7 @@ class NCAA:
         # Fetch the team metadata
         df_json = pd.read_json(f'https://web3.ncaa.org/directory/api/directory/memberList?type=12&sportCode={self.gender}VB')[['orgId', 'nameOfficial', 'divisionRoman', 'athleticWebUrl', 'conferenceName']]
         df_json['orgId'] = df_json['orgId'].astype(str)
+        df_json['img'] = df_json['orgId'].apply(lambda x: f"https://web2.ncaa.org/ncaa_style/img/All_Logos/sm/{x}.gif")
         
         # Merge
         df = pd.merge(df_json, team_codes, how='left')
@@ -822,26 +836,9 @@ class NCAA:
         return results
 
 # # Example usage
-# if __name__ == "__main__":
-#     ncaa = NCAA(gender='W')
+if __name__ == "__main__":
+    ncaa = NCAA(gender='W')
     
-#     # Example 1: Fetch NCAA teams
-#     teams = ncaa.fetch_ncaa_teams()
-#     print(f"Retrieved {len(teams)} teams")
-    
-#     # Example 2: Fetch schedule for a specific division
-#     #div_schedules = ncaa.fetch_schedule('I')  # Division I only
-#     #print(f"Retrieved {len(div_schedules)} Division I schedule entries")
-    
-#     # Example 3: Fetch a specific team's schedule
-#     if len(teams) > 0:
-#         team_ids = teams['orgId'].iloc[0:2]
-#         df_list = []
-#         for team_id in team_ids:
-#             team_schedule = ncaa.fetch_schedule_for_team(team_id, '2024-25')
-#             df_list.append(team_schedule)
-        
-#         df = pd.concat(df_list)
-#         print(df)
-#         print(f"Retrieved {len(df)} games for team {team_ids}")
-
+    # Example 1: Fetch NCAA teams
+    teams = ncaa.fetch_ncaa_teams()
+    print(f"Retrieved {teams}")

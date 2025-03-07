@@ -59,7 +59,7 @@ class PVF:
             team_entry = {
                 'team_id': team_id,
                 'name': name,
-                # 'img': img,
+                'img': img,
                 # 'color': color,
                 'current_roster_id': current_roster_id,
                 'current_season_id': current_season_id,
@@ -335,6 +335,3 @@ class PVF:
                 all_data.append(player_dict)
         
         return all_data
-
-pvf = PVF()
-print(pvf.fetch_schedule(when='past'))

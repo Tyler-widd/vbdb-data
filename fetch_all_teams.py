@@ -10,12 +10,13 @@ def fetch_all_teams():
 
     # Initialize fetchers
     lovb = LOVB()
-    ncaa = NCAA()
+    ncaa_w = NCAA('W')
+    ncaa_m = NCAA('M')
     pvf = PVF()
 
     # Fetch data
-    ncaa_m_teams = ncaa.fetch_teams('M')
-    ncaa_w_teams = ncaa.fetch_teams('W')
+    ncaa_m_teams = ncaa_m.fetch_ncaa_teams()
+    ncaa_w_teams = ncaa_w.fetch_ncaa_teams()
     lovb_teams = lovb.fetch_teams()
     pvf_teams = pvf.fetch_teams()
 
@@ -29,6 +30,7 @@ def fetch_all_teams():
             "url": team["url"],
             "conference": "LOVB",
             "level": "Pro Women",
+            'img': team['img'],
             "division": None
         })
 
@@ -38,28 +40,31 @@ def fetch_all_teams():
             "name": team["name"],
             "url": team["url"],
             "conference": "PVF",
+            'img': team['img'],
             "level": "Pro Women",
             "division": None
         })
 
     # Process NCAA Men's teams
-    for team in ncaa_m_teams:
+    for team in ncaa_m_teams.to_dict(orient='records'):
         all_teams.append({
-            "name": team["full_name"],
-            "url": team["school_athletic_url"],
-            "conference": team["conference_name"],
+            "name": team["nameOfficial"],
+            "url": team["athleticWebUrl"],
+            "conference": team["confAbbreviation"],
+            'img': team['img'],
             "level": "NCAA Men",
-            "division": team["division"]
+            "division": team["divisionRoman"]
         })
 
     # Process NCAA Women's teams
-    for team in ncaa_w_teams:
+    for team in ncaa_w_teams.to_dict(orient='records'):
         all_teams.append({
-            "name": team["full_name"],
-            "url": team["school_athletic_url"],
-            "conference": team["conference_name"],
+            "name": team["nameOfficial"],
+            "url": team["athleticWebUrl"],
+            "conference": team["confAbbreviation"],
+            'img': team['img'],
             "level": "NCAA Women",
-            "division": team["division"]
+            "division": team["divisionRoman"]
         })
 
     # Output JSON
