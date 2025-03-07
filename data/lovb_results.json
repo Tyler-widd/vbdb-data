@@ -1,6 +1,6 @@
 [
     {
-        "date": "Wed, January 8th",
+        "date": "Thu, January 9th",
         "team_1": "LOVB Salt Lake",
         "team_2": "LOVB Atlanta",
         "score": "3-1 [25-22, 27-25, 21-25, 25-21]",
@@ -11,7 +11,7 @@
         "team_2_logo": "https://lovb.com/team-cards/atlanta-card.svg"
     },
     {
-        "date": "Thu, January 9th",
+        "date": "Fri, January 10th",
         "team_1": "LOVB Austin",
         "team_2": "LOVB Houston",
         "score": "2-3 [27-25, 26-24, 22-25, 25-27, 14-16]",
@@ -33,7 +33,7 @@
         "team_2_logo": "https://lovb.com/team-cards/austin-card.svg"
     },
     {
-        "date": "Fri, January 10th",
+        "date": "Sat, January 11th",
         "team_1": "LOVB Omaha",
         "team_2": "LOVB Houston",
         "score": "3-0 [25-19, 25-20, 28-26]",
@@ -44,7 +44,7 @@
         "team_2_logo": "https://lovb.com/team-cards/houston-card.svg"
     },
     {
-        "date": "Wed, January 15th",
+        "date": "Thu, January 16th",
         "team_1": "LOVB Atlanta",
         "team_2": "LOVB Austin",
         "score": "3-1 [18-25, 25-23, 26-24, 25-21]",
@@ -55,7 +55,7 @@
         "team_2_logo": "https://lovb.com/team-cards/austin-card.svg"
     },
     {
-        "date": "Fri, January 17th",
+        "date": "Sat, January 18th",
         "team_1": "LOVB Salt Lake",
         "team_2": "LOVB Madison",
         "score": "2-3 [24-26, 25-19, 19-25, 25-16, 13-15]",
@@ -66,7 +66,7 @@
         "team_2_logo": "https://lovb.com/team-cards/madison-card.svg"
     },
     {
-        "date": "Sat, January 18th",
+        "date": "Sun, January 19th",
         "team_1": "LOVB Houston",
         "team_2": "LOVB Salt Lake",
         "score": "3-1 [25-9, 25-16, 25-27, 25-12]",
@@ -77,7 +77,7 @@
         "team_2_logo": "https://lovb.com/team-cards/salt-lake-card.svg"
     },
     {
-        "date": "Sat, January 18th",
+        "date": "Sun, January 19th",
         "team_1": "LOVB Omaha",
         "team_2": "LOVB Madison",
         "score": "3-1 [20-25, 26-24, 25-15, 25-15]",
@@ -88,7 +88,7 @@
         "team_2_logo": "https://lovb.com/team-cards/madison-card.svg"
     },
     {
-        "date": "Wed, January 22nd",
+        "date": "Thu, January 23rd",
         "team_1": "LOVB Houston",
         "team_2": "LOVB Salt Lake",
         "score": "1-3 [25-22, 15-25, 24-26, 19-25]",
@@ -99,7 +99,7 @@
         "team_2_logo": "https://lovb.com/team-cards/salt-lake-card.svg"
     },
     {
-        "date": "Fri, January 24th",
+        "date": "Sat, January 25th",
         "team_1": "LOVB Madison",
         "team_2": "LOVB Omaha",
         "score": "1-3 [20-25, 26-24, 18-25, 23-25]",
@@ -121,7 +121,7 @@
         "team_2_logo": "https://lovb.com/team-cards/madison-card.svg"
     },
     {
-        "date": "Sat, January 25th",
+        "date": "Sun, January 26th",
         "team_1": "LOVB Austin",
         "team_2": "LOVB Omaha",
         "score": "3-0 [25-23, 25-20, 25-15]",
@@ -132,7 +132,7 @@
         "team_2_logo": "https://lovb.com/team-cards/omaha-card.svg"
     },
     {
-        "date": "Wed, January 29th",
+        "date": "Thu, January 30th",
         "team_1": "LOVB Houston",
         "team_2": "LOVB Madison",
         "score": "3-0 [25-19, 25-17, 25-21]",
@@ -143,7 +143,7 @@
         "team_2_logo": "https://lovb.com/team-cards/madison-card.svg"
     },
     {
-        "date": "Fri, January 31st",
+        "date": "Sat, February 1st",
         "team_1": "LOVB Salt Lake",
         "team_2": "LOVB Atlanta",
         "score": "0-3 [22-25, 22-25, 20-25]",
@@ -165,7 +165,7 @@
         "team_2_logo": "https://lovb.com/team-cards/salt-lake-card.svg"
     },
     {
-        "date": "Sat, February 1st",
+        "date": "Sun, February 2nd",
         "team_1": "LOVB Omaha",
         "team_2": "LOVB Atlanta",
         "score": "1-3 [25-21, 22-25, 22-25, 20-25]",
@@ -176,7 +176,7 @@
         "team_2_logo": "https://lovb.com/team-cards/atlanta-card.svg"
     },
     {
-        "date": "Wed, February 5th",
+        "date": "Thu, February 6th",
         "team_1": "LOVB Houston",
         "team_2": "LOVB Austin",
         "score": "3-1 [33-31, 25-23, 21-25, 25-16]",
@@ -187,7 +187,7 @@
         "team_2_logo": "https://lovb.com/team-cards/austin-card.svg"
     },
     {
-        "date": "Fri, February 7th",
+        "date": "Sat, February 8th",
         "team_1": "LOVB Atlanta",
         "team_2": "LOVB Salt Lake",
         "score": "3-1 [25-20, 23-25, 25-18, 25-18]",
@@ -209,7 +209,7 @@
         "team_2_logo": "https://lovb.com/team-cards/atlanta-card.svg"
     },
     {
-        "date": "Sat, February 8th",
+        "date": "Sun, February 9th",
         "team_1": "LOVB Omaha",
         "team_2": "LOVB Salt Lake",
         "score": "3-2 [25-17, 25-21, 18-25, 19-25, 15-12]",
@@ -231,7 +231,7 @@
         "team_2_logo": "https://lovb.com/team-cards/houston-card.svg"
     },
     {
-        "date": "Fri, February 14th",
+        "date": "Sat, February 15th",
         "team_1": "LOVB Austin",
         "team_2": "LOVB Salt Lake",
         "score": "3-1 [26-24, 25-14, 19-25, 25-22]",
@@ -253,7 +253,7 @@
         "team_2_logo": "https://lovb.com/team-cards/omaha-card.svg"
     },
     {
-        "date": "Sat, February 15th",
+        "date": "Sun, February 16th",
         "team_1": "LOVB Austin",
         "team_2": "LOVB Atlanta",
         "score": "1-3 [15-25, 25-22, 23-25, 20-25]",
@@ -286,7 +286,7 @@
         "team_2_logo": "https://lovb.com/team-cards/omaha-card.svg"
     },
     {
-        "date": "Sun, February 16th",
+        "date": "Mon, February 17th",
         "team_1": "LOVB Houston",
         "team_2": "LOVB Atlanta",
         "score": "3-1 [25-23, 25-27, 25-20, 29-27]",
@@ -297,7 +297,7 @@
         "team_2_logo": "https://lovb.com/team-cards/atlanta-card.svg"
     },
     {
-        "date": "Wed, February 19th",
+        "date": "Thu, February 20th",
         "team_1": "LOVB Houston",
         "team_2": "LOVB Austin",
         "score": "1-3 [20-25, 25-19, 18-25, 24-26]",
@@ -319,7 +319,7 @@
         "team_2_logo": "https://lovb.com/team-cards/houston-card.svg"
     },
     {
-        "date": "Thu, February 20th",
+        "date": "Fri, February 21st",
         "team_1": "LOVB Salt Lake",
         "team_2": "LOVB Austin",
         "score": "1-3 [21-25, 22-25, 25-21, 21-25]",
@@ -330,7 +330,7 @@
         "team_2_logo": "https://lovb.com/team-cards/austin-card.svg"
     },
     {
-        "date": "Fri, February 21st",
+        "date": "Sat, February 22nd",
         "team_1": "LOVB Madison",
         "team_2": "LOVB Atlanta",
         "score": "2-3 [15-25, 21-25, 25-23, 25-23, 7-15]",
@@ -341,7 +341,7 @@
         "team_2_logo": "https://lovb.com/team-cards/atlanta-card.svg"
     },
     {
-        "date": "Thu, February 27th",
+        "date": "Fri, February 28th",
         "team_1": "LOVB Salt Lake",
         "team_2": "LOVB Houston",
         "score": "3-0 [25-17, 25-21, 25-21]",
@@ -352,7 +352,7 @@
         "team_2_logo": "https://lovb.com/team-cards/houston-card.svg"
     },
     {
-        "date": "Fri, February 28th",
+        "date": "Sat, March 1st",
         "team_1": "LOVB Omaha",
         "team_2": "LOVB Madison",
         "score": "1-3 [25-18, 22-25, 16-25, 21-25]",
@@ -374,7 +374,7 @@
         "team_2_logo": "https://lovb.com/team-cards/omaha-card.svg"
     },
     {
-        "date": "Sat, March 1st",
+        "date": "Sun, March 2nd",
         "team_1": "LOVB Austin",
         "team_2": "LOVB Madison",
         "score": "0-3 [22-25, 21-25, 17-25]",
@@ -385,7 +385,7 @@
         "team_2_logo": "https://lovb.com/team-cards/madison-card.svg"
     },
     {
-        "date": "Thu, March 6th",
+        "date": "Fri, March 7th",
         "team_1": "LOVB Salt Lake",
         "team_2": "LOVB Omaha",
         "score": "3-1 [16-25, 25-23, 25-23, 25-19]",
