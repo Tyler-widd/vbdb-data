@@ -1,5 +1,4 @@
 import requests
-import pandas as pd
 from urllib.parse import urlparse, parse_qs
 
 class PVF:
