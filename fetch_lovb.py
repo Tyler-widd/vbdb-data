@@ -196,7 +196,7 @@ class LOVB:
         return processed_data
 
     # Method to fetch and process schedule
-    def fetch_schedule(self):
+    def fetch_results(self):
         """Scrape volleyball matches using the week containers approach"""
         
         url="https://www.lovb.com/schedule"
@@ -301,13 +301,23 @@ class LOVB:
                     
                     score_string = f"{team_1_set_wins}-{team_2_set_wins} [{', '.join(score_parts)}]"
                     
+                    if match_details_link and "Salt Lake" in match_details_link:
+                        match_details_link = match_details_link.replace('Salt Lake', 'Salt-Lake')
+
+                    res = requests.get("https://lovb.com" + match_details_link if match_details_link else "")
+                    soup = BeautifulSoup(res.content, 'html.parser')
+                    team_stats = soup.find('iframe', attrs={'class': 'mt-2xl h-[23.3125rem] w-full sm:h-[24.3125rem] xl:h-[44.1875rem]'})['src'].split('?side')[0].replace('play-by-play', 'team-stats')
+                    scoreboard = soup.find('iframe', attrs={'class': 'mt-2xl h-[23.3125rem] w-full sm:h-[24.3125rem] xl:h-[44.1875rem]'})['src'].split('?side')[0].replace('play-by-play', 'scoreboard')
+
                     # Create match object
                     match_data = {
                         "date": date,
                         "team_1": team_1,
                         "team_2": team_2,
                         "score": score_string,
-                        "match_url": "lovb.com" + match_details_link if match_details_link else ""
+                        'team_stats': team_stats,
+                        'scoreboard': scoreboard,
+                        "match_url": "https://lovb.com" + match_details_link if match_details_link else ""
                     }
                     
                     all_matches.append(match_data)

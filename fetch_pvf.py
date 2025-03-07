@@ -1,6 +1,6 @@
 import requests
+import pandas as pd
 from urllib.parse import urlparse, parse_qs
-from bs4 import BeautifulSoup
 
 class PVF:
     # Function to get team details in the specified format
@@ -152,27 +152,22 @@ class PVF:
 
             # Combine the details into the desired match entry structure
             match_entry = {
-                "match_id": game.get('id'),
-                "title": title,
+                "score": game.get('result_text', ''),
                 "date": game.get('start_datetime'),
                 "location": game.get('location', ""),
-                "status": game.get('status_text', None),
-                "volley_station_match_id": game.get('volley_station_match_id', ""),
-                "home_team_id": home_details["id"],
                 "home_team_name": home_details["name"],
                 "home_team_img": home_details["img"],
-                "home_team_score": home_details["score"],
-                "home_team_color": home_details["color"],
-                "away_team_id": away_details["id"],
                 "away_team_name": away_details["name"],
                 "away_team_img": away_details["img"],
-                "away_team_score": away_details["score"],
-                "away_team_color": away_details["color"],
+                "team_stats": "https://widgets.volleystation.com/team-stats/" + str(game.get('volley_station_match_id', "")),
+                "scoreboard": "https://widgets.volleystation.com/scoreboard/" + str(game.get('volley_station_match_id', "")),
+                "video": game.get('presented_by_url', '')
             }
 
             # Add the match entry to the schedule
             schedule.append(match_entry)
-
+            
+            
         return schedule
 
     # Method to fetch and process players
@@ -342,11 +337,5 @@ class PVF:
         
         return all_data
 
-    # Methdo to fetch season results
-    def fetch_results(self):
-        url = 'https://provolleyball.com/api/schedule-events/?filter[event_state]=past&filter[season_id]=3&sort[0]=start_datetime&include[0]=firstTeam&include[1]=secondTeam&include[2]=season&include[3]=links'
-        response = requests.get(url)
-        json_data = response.json()
-        results_url = json_data['data'][0]['links'][3]['url']
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, "html.parser")
+pvf = PVF()
+print(pvf.fetch_schedule(when='past'))
