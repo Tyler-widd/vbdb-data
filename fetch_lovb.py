@@ -2,9 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 from seleniumbase import Driver
 import re
-from datetime import datetime
-import numpy as np
-import pandas as pd
 
 class LOVB:
 
@@ -352,7 +349,3 @@ class LOVB:
             match['team_2_logo'] = corrected_icons.get(match['team_2'], "Logo not found")
         
         return matches
-
-#lovb = LOVB()
-
-#print(lovb.get_matches_with_logos())

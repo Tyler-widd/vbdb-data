@@ -363,7 +363,7 @@ class NCAA:
         else:
             return pd.DataFrame()  # Return empty DataFrame if no schedules were fetched
 
-    def fetch_teams_history(self, gender, team_id):
+    def fetch_teams_history(self, team_id):
         """
         Fetch a team's history.
 

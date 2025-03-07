@@ -12,9 +12,10 @@ def fetch_and_combine_players():
     lovb_roster = lovb.fetch_rosters()
     pvf = PVF()
     pvf_roster = pvf.fetch_players()
-    ncaa = NCAA()
-    ncaa_men = ncaa.fetch_players(gender='M')
-    ncaa_women = ncaa.fetch_players(gender='W')
+    ncaa_m = NCAA(gender='M')
+    ncaa_men = ncaa_m.fetch_players()
+    ncaa_w = NCAA(gender='W')
+    ncaa_women = ncaa_w.fetch_players()
     
     # Create a unified structure for all players
     all_players = []
