@@ -8,6 +8,16 @@ import pandas as pd
 
 class LOVB:
 
+    # Icons for the teams
+    svg_icons = {
+    'LOVB Salt Lake': "https://lovb.com/team-cards/salt-lake-card.svg",
+    'LOVB Atlanta': "https://lovb.com/team-cards/atlanta-card.svg",
+    'LOVB Austin': "https://lovb.com/team-cards/austin-card.svg",
+    'LOVB Houston': "https://lovb.com/team-cards/houston-card.svg",
+    'LOVB Omaha': "https://lovb.com/team-cards/omaha-card.svg",
+    'LOVB Madison': "https://lovb.com/team-cards/madison-card.svg"
+    }
+
     # Method to fetch and process teams
     def fetch_teams(self):
         """
@@ -216,7 +226,6 @@ class LOVB:
         all_matches = []
         
         for week_idx, week in enumerate(week_containers):
-            print(f"Processing week {week_idx+1}")
             
             # Find all matches within this week
             matches = week.find_all('div', attrs={'class': '[&>header]:first-of-type:rounded-t-md'})
@@ -227,7 +236,6 @@ class LOVB:
             
             for match_idx, match in enumerate(matches):
                 try:
-                    print(f"  Processing match {match_idx+1}")
                     
                     # Get date for this match
                     date_div = match.find('div', attrs={'class': 'flex items-center gap-sm text-text-secondary'})
@@ -259,7 +267,6 @@ class LOVB:
                     
                     team_1 = teams[0]
                     team_2 = teams[1]
-                    print(f"  Teams: {team_1} vs {team_2}")
                     
                     # Get set scores
                     set_scores_divs = section.find_all('div', class_='flex items-center gap-sm')
@@ -327,9 +334,25 @@ class LOVB:
                     print(f"  Error processing match: {e}")
         
         driver.quit()
+        
+        
         return all_matches
 
+    def get_matches_with_logos(self):
+        matches = self.fetch_results()
+        
+        # Fix for the Atlanta team name
+        corrected_icons = self.svg_icons.copy()
+        if 'LOVB Atlant' in corrected_icons and 'LOVB Atlanta' not in corrected_icons:
+            corrected_icons['LOVB Atlanta'] = corrected_icons['LOVB Atlant']
+        
+        # Add logos to each match
+        for match in matches:
+            match['team_1_logo'] = corrected_icons.get(match['team_1'], "Logo not found")
+            match['team_2_logo'] = corrected_icons.get(match['team_2'], "Logo not found")
+        
+        return matches
 
-lovb = LOVB()
+#lovb = LOVB()
 
-print(lovb.fetch_schedule())
+#print(lovb.get_matches_with_logos())
