@@ -40,10 +40,10 @@ jobs:
       
       - name: Commit and push if changes
         run: |
-          if [[ -z $(git status -s data/vbdb_results.csv) ]]; then
+          if [[ -z $(git status -s data/vbdb_ncaa_results.csv) ]]; then
             echo "No changes to commit"
           else
-            git add data/vbdb_results.csv
-            git commit -m "Update vbdb_results.csv [skip ci]"
+            git add data/vbdb_ncaa_results.csv
+            git commit -m "Update vbdb_ncaa_results.csv [skip ci]"
             git push
           fi
