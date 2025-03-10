@@ -133,7 +133,7 @@ img_map = [
     "American University",
     {
         "id": "23",
-        "url": "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/american-intl.svg",
+        "url": "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/american.svg",
     },
     "Amherst College",
     {
