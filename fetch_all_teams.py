@@ -3,6 +3,7 @@ import os
 from fetch_lovb import LOVB
 from fetch_ncaa import NCAA
 from fetch_pvf import PVF
+from mappings import img_map
 
 def fetch_all_teams():
     # Ensure data directory exists
@@ -68,6 +69,22 @@ def fetch_all_teams():
         })
 
     # Output JSON
+    
+    img_dict = {}
+    for i in range(0, len(img_map), 2):
+        if i + 1 < len(img_map):  # Make sure we have a pair
+            team_name = img_map[i]
+            img_info = img_map[i + 1]
+            img_dict[team_name] = img_info
+
+    # Join the data by team name
+    for team in all_teams:
+        team_name = team["name"]
+        if team_name in img_dict:
+            # Add the additional image information to the team
+            team["img_id"] = img_dict[team_name]["id"]
+            team["img"] = img_dict[team_name]["url"]
+
     json_filename = "data/vbdb_teams.json"
     with open(json_filename, "w") as json_file:
         json.dump(all_teams, json_file, indent=4)
