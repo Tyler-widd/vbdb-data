@@ -1379,7 +1379,7 @@
         "name": "Pratt Institute",
         "url": "www.goprattgo.com",
         "conference": "UEC",
-        "img": "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/pratt-institute.svg",
+        "img": "https://s3.us-east-2.amazonaws.com/sidearm.nextgen.sites/prattinst.sidearmsports.com/images/responsive_2018/main_logo.svg",
         "level": "NCAA Men",
         "division": "III",
         "img_id": "2715"
@@ -2179,7 +2179,7 @@
         "name": "American University",
         "url": "www.aueagles.com",
         "conference": "PL",
-        "img": "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/american-intl.svg",
+        "img": "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/american.svg",
         "level": "NCAA Women",
         "division": "I",
         "img_id": "23"
@@ -8308,7 +8308,7 @@
         "name": "Plattsburgh State University of New York",
         "url": "www.gocardinalsports.com/",
         "conference": "SUNYAC",
-        "img": "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/plattsburgh-st.svg",
+        "img": "https://dbukjj6eu5tsf.cloudfront.net/sidearm.sites/sunypoly.sidearmsports.com/images/responsive_2024/logo_main.svg",
         "level": "NCAA Women",
         "division": "III",
         "img_id": "547"
@@ -8407,7 +8407,7 @@
         "name": "Pratt Institute",
         "url": "www.goprattgo.com",
         "conference": "AtlEast",
-        "img": "https://www.ncaa.com/sites/default/files/images/logos/schools/bgd/pratt-institute.svg",
+        "img": "https://s3.us-east-2.amazonaws.com/sidearm.nextgen.sites/prattinst.sidearmsports.com/images/responsive_2018/main_logo.svg",
         "level": "NCAA Women",
         "division": "III",
         "img_id": "2715"
