@@ -427,5 +427,16 @@
         "match_url": "https://lovb.com/schedule/Atlanta-Austin/89b9e3f1-6d0a-4cef-ae22-68d06761382c",
         "team_1_logo": "https://lovb.com/team-cards/austin-card.svg",
         "team_2_logo": "https://lovb.com/team-cards/atlanta-card.svg"
+    },
+    {
+        "date": "Fri, March 14th",
+        "team_1": "LOVB Omaha",
+        "team_2": "LOVB Madison",
+        "score": "0-0 []",
+        "team_stats": "https://widgets.volleystation.com/team-stats/2161326",
+        "scoreboard": "https://widgets.volleystation.com/scoreboard/2161326",
+        "match_url": "https://lovb.com/schedule/Madison-Omaha/2610e249-a93d-4c23-9260-88cacacfe72a",
+        "team_1_logo": "https://lovb.com/team-cards/omaha-card.svg",
+        "team_2_logo": "https://lovb.com/team-cards/madison-card.svg"
     }
 ]
